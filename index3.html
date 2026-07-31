@@ -1,0 +1,346 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consulta de Tareas y Asistencias - UTPL</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="bg-gray-50 font-sans min-h-screen flex flex-col items-center justify-center p-4">
+
+    <div class="bg-white p-8 rounded-2xl shadow-xl max-w-2xl w-full border border-gray-100">
+        
+        <!-- Encabezado -->
+        <div class="text-center mb-8">
+            <span class="bg-blue-100 text-blue-800 text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider">Proyecto de VinculaciÃ³n</span>
+            <h1 class="text-2xl font-bold text-gray-800 mt-3">InnovaciÃ³n Digital y Empresarial para el Crecimiento de Emprendedores</h1>
+            <p class="text-gray-500 mt-2 text-sm">Ingrese su nÃºmero de cÃ©dula para consultar su estado de asistencias y calificaciones.</p>
+        </div>
+
+        <!-- Buscador -->
+        <div class="space-y-4 mb-8">
+            <div class="flex flex-col sm:flex-row gap-3">
+                <input type="text" id="cedulaInput" placeholder="Ej: 0103616033" 
+                       onkeydown="if(event.key === 'Enter') buscarEstado()"
+                       class="flex-1 px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-lg text-center font-semibold tracking-wider">
+                <button onclick="buscarEstado()" 
+                        class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-xl transition duration-200 flex items-center justify-center gap-2 shadow-lg shadow-blue-200 cursor-pointer">
+                    <i class="fas fa-search"></i> Consultar
+                </button>
+            </div>
+            <div id="errorMsg" class="hidden text-red-600 bg-red-50 p-3 rounded-lg text-sm text-center font-medium border border-red-100"></div>
+        </div>
+
+        <!-- SecciÃ³n de Resultados -->
+        <div id="resultadoSeccion" class="hidden space-y-6 border-t border-gray-100 pt-6">
+            
+            <!-- Nombre del Estudiante -->
+            <div class="bg-blue-50/50 p-4 rounded-xl border border-blue-100 flex justify-between items-center">
+                <div>
+                    <p class="text-xs text-blue-600 font-bold uppercase tracking-wider">Beneficiario:</p>
+                    <h2 id="studentName" class="text-xl font-bold text-gray-800 mt-1"></h2>
+                </div>
+                <!-- Contador de Asistencias -->
+                <div class="text-center bg-white px-4 py-2 rounded-lg border border-gray-200 shadow-sm">
+                    <span class="text-xs font-bold text-gray-400 uppercase block">Asistencias</span>
+                    <span id="studentAsistencias" class="text-2xl font-bold text-blue-600">0</span>
+                </div>
+            </div>
+
+            <!-- Contenedor de Tareas -->
+            <div>
+                <h3 class="text-sm font-bold text-gray-700 uppercase tracking-wider mb-3 flex items-center gap-2">
+                    <i class="fas fa-tasks text-blue-500"></i> Estado de Tareas y Calificaciones
+                </h3>
+                
+                <div class="space-y-4">
+                    <!-- Tarea 1 -->
+                    <div class="p-4 bg-gray-50 rounded-xl border border-gray-200 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                        <div>
+                            <p class="font-semibold text-gray-800">Tarea 1: Entornos Digitales</p>
+                            <p class="text-xs text-gray-500">MÃ³dulo de Entornos Digitales para Negocios</p>
+                        </div>
+                        <div class="flex items-center gap-3 justify-between sm:justify-end">
+                            <div id="statusTarea1"></div>
+                            <div id="notaTarea1"></div>
+                        </div>
+                    </div>
+
+                    <!-- Tarea 2 -->
+                    <div class="p-4 bg-gray-50 rounded-xl border border-gray-200 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                        <div>
+                            <p class="font-semibold text-gray-800">Tarea 2: Proteger mi Negocio</p>
+                            <p class="text-xs text-gray-500">MÃ³dulo de Seguridad de la InformaciÃ³n</p>
+                        </div>
+                        <div class="flex items-center gap-3 justify-between sm:justify-end">
+                            <div id="statusTarea2"></div>
+                            <div id="notaTarea2"></div>
+                        </div>
+                    </div>
+
+                    <!-- Tarea 3 -->
+                    <div class="p-4 bg-gray-50 rounded-xl border border-gray-200 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                        <div>
+                            <p class="font-semibold text-gray-800">Tarea 3: Marketing Digital</p>
+                            <p class="text-xs text-gray-500">MÃ³dulo de Estrategias de Mercado</p>
+                        </div>
+                        <div class="flex items-center gap-3 justify-between sm:justify-end">
+                            <div id="statusTarea3"></div>
+                            <div id="notaTarea3"></div>
+                        </div>
+                    </div>
+
+                    <!-- Tarea 4 -->
+                    <div class="p-4 bg-gray-50 rounded-xl border border-gray-200 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                        <div>
+                            <p class="font-semibold text-gray-800">Tarea 4: Redes Sociales</p>
+                            <p class="text-xs text-gray-500">MÃ³dulo de GestiÃ³n e InteracciÃ³n Digital</p>
+                        </div>
+                        <div class="flex items-center gap-3 justify-between sm:justify-end">
+                            <div id="statusTarea4"></div>
+                            <div id="notaTarea4"></div>
+                        </div>
+                    </div>
+
+                    <!-- Tarea 5 -->
+                    <div class="p-4 bg-gray-50 rounded-xl border border-gray-200 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                        <div>
+                            <p class="font-semibold text-gray-800">Tarea 5: Ventas</p>
+                            <p class="text-xs text-gray-500">MÃ³dulo de Estrategias y Cierre de Ventas</p>
+                        </div>
+                        <div class="flex items-center gap-3 justify-between sm:justify-end">
+                            <div id="statusTarea5"></div>
+                            <div id="notaTarea5"></div>
+                        </div>
+                    </div>
+
+                    <!-- Tarea 6 -->
+                    <div class="p-4 bg-gray-50 rounded-xl border border-gray-200 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                        <div>
+                            <p class="font-semibold text-gray-800">Tarea 6: Obligaciones</p>
+                            <p class="text-xs text-gray-500">MÃ³dulo de Obligaciones Tributarias y Legales</p>
+                        </div>
+                        <div class="flex items-center gap-3 justify-between sm:justify-end">
+                            <div id="statusTarea6"></div>
+                            <div id="notaTarea6"></div>
+                        </div>
+                    </div>
+
+                      
+                </div>
+            </div>
+
+            <!-- InformaciÃ³n de Soporte -->
+            <div class="bg-amber-50 border-l-4 border-amber-500 p-4 rounded-r-xl text-xs text-amber-950 space-y-2">
+                <p class="font-semibold">âš ï¸ Nota de actualizaciÃ³n:</p>
+                <p>Las entregas de tareas y registros de asistencia pueden tardar hasta 48 horas en verse reflejados en este buscador.</p>
+                <p>ðŸ“Œ <strong>Recuerde subir sus tareas en la Plataforma de FormaciÃ³n Permanente UTPL:</strong><br>
+                    <a href="https://cursos-ec.utpl.edu.ec/course/view.php?id=365" target="_blank" class="text-blue-600 hover:underline font-semibold break-all">https://cursos-ec.utpl.edu.ec/course/view.php?id=365</a>
+                </p>
+            </div>
+
+            <!-- Pie de secciÃ³n -->
+            <div class="text-center text-xs text-gray-400 pt-2 border-t border-gray-100">
+                <p class="font-semibold">Equipo de VinculaciÃ³n UTPL</p>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // Estructura JSON exacta mapeada desde tu Excel
+        const dataExcel =
+      [id]]\": \"54308\"')
+}
+if ($startIdx -lt 0) {
+    $startIdx = $raw.LastIndexOf('54308')
+    # search backwards for '['
+    $startIdx = $raw.LastIndexOf('[', $startIdx)
+}
+
+Write-Output "startIdx: $startIdx"
+
+$endSearch = $raw.IndexOf('ZURIAGA PAYE', $startIdx)
+$endIdx = $raw.IndexOf(']', $endSearch)
+
+Write-Output "endIdx: $endIdx"
+
+if ($startIdx -ge 0 -and $endIdx -gt $startIdx) {
+    $jsonStr = $raw.Substring($startIdx, $endIdx - $startIdx + 1)
+    
+    # Fix JSON string unescaping from JSONL
+    $jsonStr = $jsonStr -replace '\\"', '"'
+    $jsonStr = $jsonStr -replace '\\
+', "`n"
+    $jsonStr = $jsonStr -replace '\\r', ""
+    $jsonStr = $jsonStr -replace '\\\\', '\'
+
+    $dataObj = $jsonStr | ConvertFrom-Json
+    Write-Output "Successfully extracted and parsed $($dataObj.Count) records!"
+
+    $htmlPath = 'c:\Users\Lenovo\Downloads\TESIS\PROYECTOBECA\index.html'
+    $html = Get-Content -Path $htmlPath -Raw
+
+    $dStart = $html.IndexOf('const dataExcel =')
+    $arrStart = $html.IndexOf('[', $dStart)
+    $semicolon = $html.IndexOf(';', $arrStart)
+    $arrEnd = $html.LastIndexOf(']', $semicolon)
+
+    $before = $html.Substring(0, $arrStart)
+    $after = $html.Substring($arrEnd + 1)
+
+    $newHtml = $before + $jsonStr + $after
+    [System.IO.File]::WriteAllText($htmlPath, $newHtml, [System.Text.Encoding]::UTF8)
+
+    Write-Output "SUCCESSFULLY UPDATED INDEX.HTML WITH NEW DATAEXCEL JSON!"
+}
+","Description":"Extract user JSON from transcript_full.jsonl and update index.html","Overwrite":true,"TargetFile":"C:\Users\Lenovo\.gemini\antigravity\brain\b07f8d07-8f98-48e5-a6fc-7242d6f49455\scratch\do_inject.ps1","toolAction":"Writing do_inject.ps1 script","toolSummary":"Write do_inject.ps1"}}]}
+{"step_index":151,"source":"MODEL","type":"CODE_ACTION","status":"DONE","created_at":"2026-07-31T08:12:42Z","content":"Created At: 2026-07-31T03:12:42-05:00
+Completed At: 2026-07-31T03:12:42-05:00
+Created file file:///C:/Users/Lenovo/.gemini/antigravity/brain/b07f8d07-8f98-48e5-a6fc-7242d6f49455/scratch/do_inject.ps1 with requested content.
+If relevant, proactively run terminal commands to execute this code for the USER. Don't ask for permission."}
+{"step_index":152,"source":"MODEL","type":"PLANNER_RESPONSE","status":"DONE","created_at":"2026-07-31T08:12:43Z","tool_calls":[{"name":"run_command","args":{"CommandLine":"powershell -ExecutionPolicy Bypass -File "C:\Users\Lenovo\.gemini\antigravity\brain\b07f8d07-8f98-48e5-a6fc-7242d6f49455\scratch\do_inject.ps1"","Cwd":"c:\Users\Lenovo\Downloads\TESIS\PROYECTOBECA","WaitMsBeforeAsync":10000,"toolAction":"Running do_inject.ps1","toolSummary":"Execute do_inject script"}}]}
+{"step_index":153,"source":"MODEL","type":"RUN_COMMAND","status":"DONE","created_at":"2026-07-31T08:12:46Z","content":"Created At: 2026-07-31T03:12:46-05:00
+Completed At: 2026-07-31T03:12:54-05:00
+
+\t\t\t\tThe command completed successfully.
+\t\t\t\tOutput:
+\t\t\t\tstartIdx: 228285
+endIdx: 228588
+ConvertFrom-Json : Primitivo JSON no vï¿½lido: id.
+En C:\Users\Lenovo\.gemini\antigravity\brain\b07f8d07-8f98-48e5-a6fc-7242d6f49455\scratch\do_inject.ps1: 29 Carï¿½cter: 
+27
++     $dataObj = $jsonStr | ConvertFrom-Json
++                           ~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [ConvertFrom-Json], ArgumentException
+    + FullyQualifiedErrorId : System.ArgumentException,Microsoft.PowerShell.Commands.ConvertFromJsonCommand
+ 
+Successfully extracted and parsed 0 records!
+SUCCESSFULLY UPDATED INDEX.HTML WITH NEW DATAEXCEL JSON!
+
+"}
+{"step_index":154,"source":"MODEL","type":"PLANNER_RESPONSE","status":"DONE","created_at":"2026-07-31T08:12:54Z","thinking":"**Analyzing Indexing Logic**
+
+I'm currently focused on the logic behind calculating `startIdx` and `endIdx`. I see that `endIdx` is determined by the last occurrence of "ZURIAGA PAYE" in the raw data, and then finding the index of the next closing bracket. Now, I'm working to confirm that my assumptions of the data structure and expected behavior are correct.
+
+
+","tool_calls":[{"name":"write_to_file","args":{"CodeContent":"$raw = Get-Content 'C:\Users\Lenovo\.gemini\antigravity\brain\b07f8d07-8f98-48e5-a6fc-7242d6f49455\.system_generated\logs\transcript_full.jsonl' -Raw
+
+$endSearch = $raw.LastIndexOf('ZURIAGA PAYE')
+$endIdx = $raw.IndexOf(']
+    
+    
+ 
+    ;
+
+        function buscarEstado() {
+            const cedulaRaw = document.getElementById('cedulaInput').value;
+            const cedulaInput = cedulaRaw ? cedulaRaw.trim() : '';
+            const errorMsg = document.getElementById('errorMsg');
+            const resultadoSeccion = document.getElementById('resultadoSeccion');
+
+            errorMsg.classList.add('hidden');
+            resultadoSeccion.classList.add('hidden');
+
+            if (cedulaInput === '') {
+                errorMsg.textContent = "Por favor, ingrese un nÃºmero de cÃ©dula.";
+                errorMsg.classList.remove('hidden');
+                return;
+            }
+
+            // NormalizaciÃ³n para bÃºsqueda flexible de cÃ©dula (omite espacios/caracteres no numÃ©ricos)
+            const cedulaLimpia = cedulaInput.replace(/\D/g, '');
+
+            const estudiante = dataExcel.find(item => {
+                const idItem = (item["NÃºmero de ID"] || item["ID"] || "").toString().trim();
+                const idItemLimpia = idItem.replace(/\D/g, '');
+                
+                return idItem === cedulaInput || 
+                       (cedulaLimpia !== "" && idItemLimpia === cedulaLimpia) ||
+                       (cedulaLimpia !== "" && idItemLimpia.padStart(10, '0') === cedulaLimpia.padStart(10, '0'));
+            });
+
+            if (estudiante) {
+                // FusiÃ³n limpia de Nombre y Apellido(s)
+                const nombreCompleto = `${estudiante["Nombre"] || ''} ${estudiante["Apellido(s)"] || ''}`.trim();
+                document.getElementById('studentName').textContent = nombreCompleto;
+                document.getElementById('studentAsistencias').textContent = estudiante["Asistencias"] || '0';
+
+                // EvalÃºa estados de entrega con soporte para distintas variaciones de claves
+                const t1 = estudiante["Tarea1EntornosDigitale"] || estudiante["Tarea1EntornosDigitales"] || estudiante["Tarea1"];
+                const t2 = estudiante["Tarea2ProtegerMiNegocio"] || estudiante["Tarea2"];
+                const t3 = estudiante["Tarea3MarketingDigital"] || estudiante["Tarea3"];
+                const t4 = estudiante["Tarea4Redes"] || estudiante["Tarea4Redes Sociales"] || estudiante["Tarea4RedesSociales"] || estudiante["Tarea4"];
+                const t5 = estudiante["Tarea5Ventas"] || estudiante["Tarea5"];
+                const t6 = estudiante["Tarea6Obligaciones"] || estudiante["Tarea6"];
+
+                renderBadge('statusTarea1', t1);
+                renderBadge('statusTarea2', t2);
+                renderBadge('statusTarea3', t3);
+                renderBadge('statusTarea4', t4);
+                renderBadge('statusTarea5', t5);
+                renderBadge('statusTarea6', t6);
+
+                // EvalÃºa las notas numÃ©ricas o vacÃ­as
+                const n1 = estudiante["NotaTarea1"] || estudiante["Nota1"];
+                const n2 = estudiante["NotaTarea2"] || estudiante["Nota2"];
+                const n3 = estudiante["NotaTarea3"] || estudiante["Nota3"];
+                const n4 = estudiante["NotaTarea4"] || estudiante["Nota4"];
+                const n5 = estudiante["NotaTarea5"] || estudiante["Nota5"];
+                const n6 = estudiante["NotaTarea6"] || estudiante["Nota6"];
+
+                renderNota('notaTarea1', n1);
+                renderNota('notaTarea2', n2);
+                renderNota('notaTarea3', n3);
+                renderNota('notaTarea4', n4);
+                renderNota('notaTarea5', n5);
+                renderNota('notaTarea6', n6);
+
+                resultadoSeccion.classList.remove('hidden');
+            } else {
+                errorMsg.textContent = "No se encontrÃ³ ningÃºn registro con el nÃºmero de cÃ©dula ingresado.";
+                errorMsg.classList.remove('hidden');
+            }
+        }
+
+        function renderBadge(elementId, valor) {
+            const contenedor = document.getElementById(elementId);
+            if (!contenedor) return;
+
+            const valStr = valor ? String(valor).trim().toUpperCase() : "";
+            if (valStr === 'E') {
+                contenedor.innerHTML = `
+                    <span class="inline-flex items-center gap-1.5 bg-emerald-100 text-emerald-800 text-xs font-bold px-3 py-1.5 rounded-full border border-emerald-200 uppercase">
+                        <i class="fas fa-check-circle text-emerald-600"></i> Entregado
+                    </span>`;
+            } else {
+                contenedor.innerHTML = `
+                    <span class="inline-flex items-center gap-1.5 bg-rose-100 text-rose-800 text-xs font-bold px-3 py-1.5 rounded-full border border-rose-200 uppercase">
+                        <i class="fas fa-times-circle text-rose-600"></i> Pendiente
+                    </span>`;
+            }
+        }
+
+        function renderNota(elementId, nota) {
+            const contenedor = document.getElementById(elementId);
+            if (!contenedor) return;
+
+            const notaLimpia = nota ? String(nota).trim() : "";
+
+            // Si estÃ¡ vacÃ­o o tiene un guion
+            if (notaLimpia === "" || notaLimpia === "-") {
+                contenedor.innerHTML = `
+                    <span class="inline-flex items-center text-xs text-gray-400 font-medium bg-gray-100 px-2.5 py-1.5 rounded-full border border-gray-200">
+                        Sin calificar
+                    </span>`;
+            } else {
+                contenedor.innerHTML = `
+                    <span class="inline-flex items-center gap-1.5 bg-blue-50 text-blue-700 text-xs font-bold px-3 py-1.5 rounded-full border border-blue-200">
+                        <i class="fas fa-star text-blue-500"></i> CalificaciÃ³n: ${notaLimpia}
+                    </span>`;
+            }
+        }
+    </script>
+</body>
+</html>
